@@ -7,11 +7,24 @@
 
 <style>
 body{
+    margin:0;
+    padding:0;
+    overflow:hidden;
     background:black;
     color:#00ff00;
     font-family:monospace;
     text-align:center;
-    padding-top:100px;
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:-1;
+}
+
+.container{
+    margin-top:120px;
 }
 
 .hidden{
@@ -39,10 +52,26 @@ input{
     padding:8px;
     text-align:center;
 }
+
+.glitch{
+    animation: glitch 0.2s infinite;
+}
+
+@keyframes glitch{
+    0%{transform:translate(2px,2px);}
+    25%{transform:translate(-2px,-2px);}
+    50%{transform:translate(2px,-2px);}
+    75%{transform:translate(-2px,2px);}
+    100%{transform:translate(0);}
+}
 </style>
 </head>
 
 <body>
+
+<canvas id="matrix"></canvas>
+
+<div class="container">
 
 <div id="login">
 <h2>🔐 ACCESO RESTRINGIDO</h2>
@@ -54,19 +83,59 @@ input{
 </div>
 
 <div id="question" class="hidden">
-<h2>WANDA DETECTADA 💚</h2>
+<h2 class="glitch">WANDA DETECTADA 💚</h2>
 <p>¿Aceptas ser mi San Valentín?</p>
 <button id="btnYes">SI 💚</button>
 <button id="btnNo">NO 💀</button>
 </div>
 
 <div id="accepted" class="hidden">
-<h1>💚 SISTEMA COMPROMETIDO 💚</h1>
+<h1 class="glitch">💚 SISTEMA COMPROMETIDO 💚</h1>
 <p>Wanda ha aceptado ser mi San Valentín 💘</p>
+</div>
+
 </div>
 
 <script>
 
+// MATRIX BACKGROUND
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const letters = "アァカサタナハマヤャラワ0123456789";
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+const drops = [];
+
+for(let x = 0; x < columns; x++){
+    drops[x] = 1;
+}
+
+function draw(){
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#00ff00";
+    ctx.font = fontSize + "px monospace";
+
+    for(let i = 0; i < drops.length; i++){
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if(drops[i] * fontSize > canvas.height && Math.random() > 0.975){
+            drops[i] = 0;
+        }
+
+        drops[i]++;
+    }
+}
+
+setInterval(draw, 33);
+
+// LOGIN
 document.getElementById("btnLogin").addEventListener("click", function(){
 
     let pass = document.getElementById("password").value.trim();
@@ -80,22 +149,18 @@ document.getElementById("btnLogin").addEventListener("click", function(){
 
 });
 
+// YES
 document.getElementById("btnYes").addEventListener("click", function(){
-
     document.getElementById("question").classList.add("hidden");
     document.getElementById("accepted").classList.remove("hidden");
-
 });
 
+// NO
 document.getElementById("btnNo").addEventListener("click", function(){
-
-    document.body.style.background="red";
-    document.body.innerHTML="<h1>⚠ SISTEMA CORROMPIDO ⚠</h1>";
-
+    document.body.classList.add("glitch");
     setTimeout(()=>{
         location.reload();
     },2000);
-
 });
 
 </script>
