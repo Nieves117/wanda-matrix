@@ -6,20 +6,25 @@
 <title>Wanda 💚</title>
 
 <style>
-body{
+*{
     margin:0;
     padding:0;
-    overflow:hidden;
+    box-sizing:border-box;
+}
+
+body{
     background:black;
     color:#00ff00;
     font-family:monospace;
     text-align:center;
 }
 
-canvas{
+#matrix{
     position:fixed;
     top:0;
     left:0;
+    width:100%;
+    height:100%;
     z-index:-1;
 }
 
@@ -97,22 +102,23 @@ input{
 </div>
 
 <script>
+window.onload = function(){
 
-// MATRIX BACKGROUND
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
-
-const letters = "アァカサタナハマヤャラワ0123456789";
-const fontSize = 16;
-const columns = canvas.width / fontSize;
-const drops = [];
-
-for(let x = 0; x < columns; x++){
-    drops[x] = 1;
+function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 }
+
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const letters = "01";
+const fontSize = 16;
+let columns = Math.floor(canvas.width / fontSize);
+let drops = Array(columns).fill(1);
 
 function draw(){
     ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
@@ -122,13 +128,12 @@ function draw(){
     ctx.font = fontSize + "px monospace";
 
     for(let i = 0; i < drops.length; i++){
-        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        const text = letters[Math.floor(Math.random() * letters.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
         if(drops[i] * fontSize > canvas.height && Math.random() > 0.975){
             drops[i] = 0;
         }
-
         drops[i]++;
     }
 }
@@ -137,16 +142,13 @@ setInterval(draw, 33);
 
 // LOGIN
 document.getElementById("btnLogin").addEventListener("click", function(){
-
     let pass = document.getElementById("password").value.trim();
-
     if(pass === "05/09/2024"){
         document.getElementById("login").classList.add("hidden");
         document.getElementById("question").classList.remove("hidden");
     } else {
         document.getElementById("error").innerHTML="⛔ ACCESS DENIED ⛔";
     }
-
 });
 
 // YES
@@ -158,11 +160,10 @@ document.getElementById("btnYes").addEventListener("click", function(){
 // NO
 document.getElementById("btnNo").addEventListener("click", function(){
     document.body.classList.add("glitch");
-    setTimeout(()=>{
-        location.reload();
-    },2000);
+    setTimeout(()=>{ location.reload(); },2000);
 });
 
+};
 </script>
 
 </body>
