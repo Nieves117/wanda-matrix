@@ -8,7 +8,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
 body{
     background:black;
@@ -31,31 +35,33 @@ body{
 }
 
 h2{
-    font-family:'Orbitron',sans-serif;
+    font-family:'Orbitron', sans-serif;
     font-size:28px;
-    text-shadow:0 0 10px #00ff88,0 0 25px #00ff88;
+    text-shadow:0 0 10px #00ff88,0 0 30px #00ff88;
 }
 
 h1{
-    font-family:'Great Vibes',cursive;
+    font-family:'Great Vibes', cursive;
     font-size:60px;
-    margin-top:20px;
     text-shadow:0 0 20px #00ff88;
 }
 
 p{
-    font-family:'Orbitron',sans-serif;
+    font-family:'Orbitron', sans-serif;
     margin-top:15px;
-    text-shadow:0 0 10px #00ff88;
+}
+
+.hidden{
+    display:none;
 }
 
 input{
     margin-top:15px;
     padding:10px;
-    font-size:16px;
     background:black;
     border:2px solid #00ff88;
     color:#00ff88;
+    font-size:16px;
     text-align:center;
 }
 
@@ -65,8 +71,9 @@ button{
     background:transparent;
     border:2px solid #00ff88;
     color:#00ff88;
+    font-size:16px;
     cursor:pointer;
-    transition:.3s;
+    transition:0.3s;
 }
 
 button:hover{
@@ -75,10 +82,8 @@ button:hover{
     box-shadow:0 0 20px #00ff88;
 }
 
-.hidden{display:none;}
-
 .glitch{
-    animation:glitch .15s infinite;
+    animation:glitch 0.15s infinite;
 }
 
 @keyframes glitch{
@@ -101,8 +106,8 @@ button:hover{
 
 <div id="login">
     <h2>🔐 ACCESO PRIVADO</h2>
-    <p>Introduce nuestra fecha especial</p>
-    <input type="password" id="password" placeholder="5/9/2024">
+    <p>Ingresa una fecha</p>
+    <input type="password" id="password" autocomplete="off" placeholder="DD/MM/AAAA">
     <br>
     <button id="btnLogin">INGRESAR</button>
     <p id="error"></p>
@@ -111,21 +116,22 @@ button:hover{
 <div id="question" class="hidden">
     <h2 class="glitch">WANDA DETECTADA 💚</h2>
     <p>¿Aceptas ser mi San Valentín?</p>
-    <button id="btnYes">SI 💚</button>
+    <button id="btnYes">SÍ 💚</button>
     <button id="btnNo">NO 💀</button>
 </div>
 
 <div id="accepted" class="hidden">
     <h1>Wanda 💚</h1>
-    <p>Sistema comprometido…<br>
-    Has aceptado ser mi San Valentín 💘</p>
+    <p>Sistema comprometido…  
+    Aceptaste ser mi San Valentín 💘</p>
 </div>
 
 </div>
 
 <script>
-window.onload = () => {
+window.onload = function(){
 
+/* MATRIX */
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
@@ -146,49 +152,52 @@ function draw(){
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
     ctx.fillStyle = "#00ff88";
+    ctx.font = fontSize + "px monospace";
     ctx.shadowColor = "#00ff88";
     ctx.shadowBlur = 15;
-    ctx.font = fontSize+"px monospace";
 
-    for(let i=0;i<columns;i++){
+    for(let i=0;i<drops.length;i++){
         let char = word[drops[i] % word.length];
         ctx.fillText(char, i*fontSize, drops[i]*fontSize);
 
-        if(drops[i]*fontSize > canvas.height && Math.random() > 0.97){
-            drops[i] = 0;
+        if(drops[i]*fontSize > canvas.height && Math.random()>0.97){
+            drops[i]=0;
         }
         drops[i]++;
     }
 }
-setInterval(draw,50);
+setInterval(draw, 50);
 
-// LOGIN
-document.getElementById("btnLogin").onclick = () => {
-    let pass = document.getElementById("password").value.trim().toLowerCase();
+/* LOGIN */
+document.getElementById("btnLogin").onclick = function(){
+    let pass = document.getElementById("password").value.trim();
 
     const valid = [
-        "5/9/2024","05/09/2024","5/09/2024",
-        "05/9/2024","5 septiembre 2024",
-        "5 de septiembre de 2024","05092024"
+        "05/09/2024",
+        "5/9/2024",
+        "5/09/2024",
+        "05/9/2024"
     ];
 
     if(valid.includes(pass)){
         document.getElementById("login").classList.add("hidden");
         document.getElementById("question").classList.remove("hidden");
-        document.getElementById("music").play();
     }else{
-        document.getElementById("error").innerText = "⛔ ACCESO DENEGADO";
+        document.getElementById("error").innerText = "⛔ ACCESO DENEGADO ⛔";
     }
 };
 
-// YES
-document.getElementById("btnYes").onclick = () => {
+/* YES */
+document.getElementById("btnYes").onclick = function(){
     document.getElementById("question").classList.add("hidden");
     document.getElementById("accepted").classList.remove("hidden");
+
+    // 🎵 Música solo cuando dice SÍ
+    document.getElementById("music").play();
 };
 
-// NO
-document.getElementById("btnNo").onclick = () => {
+/* NO */
+document.getElementById("btnNo").onclick = function(){
     document.body.classList.add("glitch");
     setTimeout(()=>location.reload(),2000);
 };
