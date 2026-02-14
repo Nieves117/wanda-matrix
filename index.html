@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wanda 💚</title>
 
+<!-- FUENTE BONITA -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Great+Vibes&display=swap" rel="stylesheet">
+
 <style>
 *{
     margin:0;
@@ -15,12 +18,11 @@
 body{
     background:black;
     color:#00ff88;
-    font-family:monospace;
-    text-align:center;
     overflow:hidden;
+    text-align:center;
 }
 
-/* CANVAS */
+/* CANVAS MATRIX */
 #matrix{
     position:fixed;
     top:0;
@@ -35,10 +37,25 @@ body{
     margin-top:120px;
 }
 
-h2, h1, p{
+h2{
+    font-family: 'Orbitron', sans-serif;
+    font-size:28px;
     text-shadow: 0 0 10px #00ff88,
                  0 0 20px #00ff88,
                  0 0 40px #00ff88;
+}
+
+h1{
+    font-family: 'Great Vibes', cursive;
+    font-size:60px;
+    color:#00ff88;
+    text-shadow:0 0 20px #00ff88;
+}
+
+p{
+    font-family:'Orbitron', sans-serif;
+    margin-top:15px;
+    text-shadow:0 0 10px #00ff88;
 }
 
 .hidden{
@@ -46,32 +63,34 @@ h2, h1, p{
 }
 
 button{
+    margin:15px;
+    padding:12px 25px;
+    font-size:16px;
     background:transparent;
     border:2px solid #00ff88;
     color:#00ff88;
-    padding:10px 20px;
-    margin:10px;
     cursor:pointer;
-    font-weight:bold;
     transition:0.3s;
 }
 
 button:hover{
     background:#00ff88;
     color:black;
-    box-shadow:0 0 15px #00ff88;
+    box-shadow:0 0 20px #00ff88;
 }
 
 input{
+    margin-top:15px;
+    padding:10px;
     background:black;
     border:2px solid #00ff88;
     color:#00ff88;
-    padding:8px;
     text-align:center;
+    font-size:16px;
 }
 
 .glitch{
-    animation: glitch 0.15s infinite;
+    animation: glitch 0.2s infinite;
 }
 
 @keyframes glitch{
@@ -88,13 +107,16 @@ input{
 
 <canvas id="matrix"></canvas>
 
+<!-- AUDIO -->
+<audio id="music" src="gardenias.mp3" loop></audio>
+
 <div class="container">
 
 <div id="login">
-<h2>🔐 ACCESO RESTRINGIDO</h2>
+<h2>🔐 ACCESO PRIVADO</h2>
 <p>Introduce la fecha especial...</p>
 <input type="password" id="password">
-<br><br>
+<br>
 <button id="btnLogin">INGRESAR</button>
 <p id="error"></p>
 </div>
@@ -107,8 +129,9 @@ input{
 </div>
 
 <div id="accepted" class="hidden">
-<h1 class="glitch">💚 SISTEMA COMPROMETIDO 💚</h1>
-<p>Wanda ha aceptado ser mi San Valentín 💘</p>
+<h1>Wanda 💚</h1>
+<p>Sistema comprometido...  
+Has aceptado ser mi San Valentín 💘</p>
 </div>
 
 </div>
@@ -123,47 +146,51 @@ function resizeCanvas(){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-// 💚 TEXTO MATRIX PERSONALIZADO
-const letters = "WANDA VALENTIN 01 10 ♥ ♥ ♥ ";
-const fontSize = 18;
+const word = "WANDA";
+const fontSize = 24;
 let columns = Math.floor(canvas.width / fontSize);
-let drops = Array(columns).fill(1);
+let drops = Array(columns).fill(0);
 
 function draw(){
-    ctx.fillStyle = "rgba(0, 0, 0, 0.07)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(0,0,0,0.08)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
 
     ctx.fillStyle = "#00ff88";
     ctx.shadowColor = "#00ff88";
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 15;
     ctx.font = fontSize + "px monospace";
 
-    for(let i = 0; i < drops.length; i++){
-        const text = letters[Math.floor(Math.random() * letters.length)];
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+    for(let i=0; i<columns; i++){
+        let text = word[drops[i] % word.length];
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
 
-        if(drops[i] * fontSize > canvas.height && Math.random() > 0.97){
-            drops[i] = 0;
+        if(drops[i]*fontSize > canvas.height && Math.random()>0.975){
+            drops[i]=0;
         }
         drops[i]++;
     }
 }
 
-setInterval(draw, 40);
+setInterval(draw,50);
 
 // LOGIN
 document.getElementById("btnLogin").addEventListener("click", function(){
+
     let pass = document.getElementById("password").value.trim();
+
     if(pass === "05/09/2024"){
         document.getElementById("login").classList.add("hidden");
         document.getElementById("question").classList.remove("hidden");
+
+        // ACTIVAR MUSICA (los navegadores requieren interacción)
+        document.getElementById("music").play();
     } else {
         document.getElementById("error").innerHTML="⛔ ACCESS DENIED ⛔";
     }
+
 });
 
 // YES
