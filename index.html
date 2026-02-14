@@ -5,15 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wanda 💚</title>
 
-<!-- FUENTE BONITA -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
     background:black;
@@ -22,7 +17,6 @@ body{
     text-align:center;
 }
 
-/* CANVAS MATRIX */
 #matrix{
     position:fixed;
     top:0;
@@ -32,45 +26,47 @@ body{
     z-index:-1;
 }
 
-/* CONTENIDO */
 .container{
     margin-top:120px;
 }
 
 h2{
-    font-family: 'Orbitron', sans-serif;
+    font-family:'Orbitron',sans-serif;
     font-size:28px;
-    text-shadow: 0 0 10px #00ff88,
-                 0 0 20px #00ff88,
-                 0 0 40px #00ff88;
+    text-shadow:0 0 10px #00ff88,0 0 25px #00ff88;
 }
 
 h1{
-    font-family: 'Great Vibes', cursive;
+    font-family:'Great Vibes',cursive;
     font-size:60px;
-    color:#00ff88;
+    margin-top:20px;
     text-shadow:0 0 20px #00ff88;
 }
 
 p{
-    font-family:'Orbitron', sans-serif;
+    font-family:'Orbitron',sans-serif;
     margin-top:15px;
     text-shadow:0 0 10px #00ff88;
 }
 
-.hidden{
-    display:none;
+input{
+    margin-top:15px;
+    padding:10px;
+    font-size:16px;
+    background:black;
+    border:2px solid #00ff88;
+    color:#00ff88;
+    text-align:center;
 }
 
 button{
     margin:15px;
     padding:12px 25px;
-    font-size:16px;
     background:transparent;
     border:2px solid #00ff88;
     color:#00ff88;
     cursor:pointer;
-    transition:0.3s;
+    transition:.3s;
 }
 
 button:hover{
@@ -79,18 +75,10 @@ button:hover{
     box-shadow:0 0 20px #00ff88;
 }
 
-input{
-    margin-top:15px;
-    padding:10px;
-    background:black;
-    border:2px solid #00ff88;
-    color:#00ff88;
-    text-align:center;
-    font-size:16px;
-}
+.hidden{display:none;}
 
 .glitch{
-    animation: glitch 0.2s infinite;
+    animation:glitch .15s infinite;
 }
 
 @keyframes glitch{
@@ -107,47 +95,46 @@ input{
 
 <canvas id="matrix"></canvas>
 
-<!-- AUDIO -->
 <audio id="music" src="gardenias.mp3" loop></audio>
 
 <div class="container">
 
 <div id="login">
-<h2>🔐 ACCESO PRIVADO</h2>
-<p>Introduce la fecha especial...</p>
-<input type="password" id="password">
-<br>
-<button id="btnLogin">INGRESAR</button>
-<p id="error"></p>
+    <h2>🔐 ACCESO PRIVADO</h2>
+    <p>Introduce nuestra fecha especial</p>
+    <input type="password" id="password" placeholder="5/9/2024">
+    <br>
+    <button id="btnLogin">INGRESAR</button>
+    <p id="error"></p>
 </div>
 
 <div id="question" class="hidden">
-<h2 class="glitch">WANDA DETECTADA 💚</h2>
-<p>¿Aceptas ser mi San Valentín?</p>
-<button id="btnYes">SI 💚</button>
-<button id="btnNo">NO 💀</button>
+    <h2 class="glitch">WANDA DETECTADA 💚</h2>
+    <p>¿Aceptas ser mi San Valentín?</p>
+    <button id="btnYes">SI 💚</button>
+    <button id="btnNo">NO 💀</button>
 </div>
 
 <div id="accepted" class="hidden">
-<h1>Wanda 💚</h1>
-<p>Sistema comprometido...  
-Has aceptado ser mi San Valentín 💘</p>
+    <h1>Wanda 💚</h1>
+    <p>Sistema comprometido…<br>
+    Has aceptado ser mi San Valentín 💘</p>
 </div>
 
 </div>
 
 <script>
-window.onload = function(){
+window.onload = () => {
 
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
-function resizeCanvas(){
+function resize(){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+resize();
+window.addEventListener("resize", resize);
 
 const word = "WANDA";
 const fontSize = 24;
@@ -161,53 +148,53 @@ function draw(){
     ctx.fillStyle = "#00ff88";
     ctx.shadowColor = "#00ff88";
     ctx.shadowBlur = 15;
-    ctx.font = fontSize + "px monospace";
+    ctx.font = fontSize+"px monospace";
 
-    for(let i=0; i<columns; i++){
-        let text = word[drops[i] % word.length];
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+    for(let i=0;i<columns;i++){
+        let char = word[drops[i] % word.length];
+        ctx.fillText(char, i*fontSize, drops[i]*fontSize);
 
-        if(drops[i]*fontSize > canvas.height && Math.random()>0.975){
-            drops[i]=0;
+        if(drops[i]*fontSize > canvas.height && Math.random() > 0.97){
+            drops[i] = 0;
         }
         drops[i]++;
     }
 }
-
 setInterval(draw,50);
 
 // LOGIN
-document.getElementById("btnLogin").addEventListener("click", function(){
+document.getElementById("btnLogin").onclick = () => {
+    let pass = document.getElementById("password").value.trim().toLowerCase();
 
-    let pass = document.getElementById("password").value.trim();
+    const valid = [
+        "5/9/2024","05/09/2024","5/09/2024",
+        "05/9/2024","5 septiembre 2024",
+        "5 de septiembre de 2024","05092024"
+    ];
 
-    if(pass === "05/09/2024"){
+    if(valid.includes(pass)){
         document.getElementById("login").classList.add("hidden");
         document.getElementById("question").classList.remove("hidden");
-
-        // ACTIVAR MUSICA (los navegadores requieren interacción)
         document.getElementById("music").play();
-    } else {
-        document.getElementById("error").innerHTML="⛔ ACCESS DENIED ⛔";
+    }else{
+        document.getElementById("error").innerText = "⛔ ACCESO DENEGADO";
     }
-
-});
+};
 
 // YES
-document.getElementById("btnYes").addEventListener("click", function(){
+document.getElementById("btnYes").onclick = () => {
     document.getElementById("question").classList.add("hidden");
     document.getElementById("accepted").classList.remove("hidden");
-});
+};
 
 // NO
-document.getElementById("btnNo").addEventListener("click", function(){
+document.getElementById("btnNo").onclick = () => {
     document.body.classList.add("glitch");
-    setTimeout(()=>{ location.reload(); },2000);
-});
+    setTimeout(()=>location.reload(),2000);
+};
 
 };
 </script>
 
 </body>
 </html>
-
