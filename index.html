@@ -8,17 +8,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
     background:black;
     color:#00ff88;
     overflow:hidden;
     text-align:center;
+    transition:background 1s ease;
+}
+
+body.romantic{
+    background:#2b001f;
 }
 
 #matrix{
@@ -42,8 +43,15 @@ h2{
 
 h1{
     font-family:'Great Vibes', cursive;
-    font-size:60px;
-    text-shadow:0 0 20px #00ff88;
+    font-size:70px;
+    text-shadow:0 0 20px #ff66cc;
+    color:#ff99dd;
+    animation:fadeIn 2s ease forwards;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(30px);}
+    to{opacity:1;transform:translateY(0);}
 }
 
 p{
@@ -51,9 +59,7 @@ p{
     margin-top:15px;
 }
 
-.hidden{
-    display:none;
-}
+.hidden{display:none;}
 
 input{
     margin-top:15px;
@@ -74,6 +80,7 @@ button{
     font-size:16px;
     cursor:pointer;
     transition:0.3s;
+    position:relative;
 }
 
 button:hover{
@@ -99,15 +106,13 @@ button:hover{
 <body>
 
 <canvas id="matrix"></canvas>
-
 <audio id="music" src="gardenias.mp3" loop></audio>
 
 <div class="container">
 
 <div id="login">
     <h2>🔐 ACCESO PRIVADO</h2>
-    <p>Ingresa una fecha</p>
-    <input type="password" id="password" autocomplete="off" placeholder="DD/MM/AAAA">
+    <input type="password" id="password" autocomplete="off" placeholder="Ingresa la fecha de hoy">
     <br>
     <button id="btnLogin">INGRESAR</button>
     <p id="error"></p>
@@ -121,85 +126,89 @@ button:hover{
 </div>
 
 <div id="accepted" class="hidden">
-    <h1>Wanda 💚</h1>
-    <p>Sistema comprometido…  
-    Aceptaste ser mi San Valentín 💘</p>
+    <h1>Te amo Wanda 💖</h1>
 </div>
 
 </div>
 
 <script>
-window.onload = function(){
+window.onload=function(){
 
-/* MATRIX */
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
 
 function resize(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
 }
 resize();
-window.addEventListener("resize", resize);
+window.addEventListener("resize",resize);
 
-const word = "WANDA";
-const fontSize = 24;
-let columns = Math.floor(canvas.width / fontSize);
-let drops = Array(columns).fill(0);
+let mode="matrix";
+const fontSize=24;
+let columns=Math.floor(canvas.width/fontSize);
+let drops=Array(columns).fill(0);
 
 function draw(){
-    ctx.fillStyle = "rgba(0,0,0,0.08)";
+    ctx.fillStyle="rgba(0,0,0,0.08)";
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    ctx.fillStyle = "#00ff88";
-    ctx.font = fontSize + "px monospace";
-    ctx.shadowColor = "#00ff88";
-    ctx.shadowBlur = 15;
+    ctx.font=fontSize+"px monospace";
+    ctx.shadowBlur=15;
 
     for(let i=0;i<drops.length;i++){
-        let char = word[drops[i] % word.length];
-        ctx.fillText(char, i*fontSize, drops[i]*fontSize);
 
-        if(drops[i]*fontSize > canvas.height && Math.random()>0.97){
+        let text;
+        if(mode==="matrix"){
+            const word="WANDA";
+            text=word[drops[i]%word.length];
+            ctx.fillStyle="#00ff88";
+            ctx.shadowColor="#00ff88";
+        }else{
+            text="💖";
+            ctx.fillStyle="#ff66cc";
+            ctx.shadowColor="#ff66cc";
+        }
+
+        ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+        if(drops[i]*fontSize>canvas.height&&Math.random()>0.97){
             drops[i]=0;
         }
         drops[i]++;
     }
 }
-setInterval(draw, 50);
+setInterval(draw,50);
 
 /* LOGIN */
-document.getElementById("btnLogin").onclick = function(){
-    let pass = document.getElementById("password").value.trim();
+document.getElementById("btnLogin").onclick=function(){
+    let pass=document.getElementById("password").value.trim();
 
-    const valid = [
-        "05/09/2024",
-        "5/9/2024",
-        "5/09/2024",
-        "05/9/2024"
-    ];
+    const valid=["05/09/2024","5/9/2024","5/09/2024","05/9/2024"];
 
     if(valid.includes(pass)){
         document.getElementById("login").classList.add("hidden");
         document.getElementById("question").classList.remove("hidden");
     }else{
-        document.getElementById("error").innerText = "⛔ ACCESO DENEGADO ⛔";
+        document.getElementById("error").innerText="⛔ ACCESO DENEGADO ⛔";
     }
 };
 
-/* YES */
-document.getElementById("btnYes").onclick = function(){
-    document.getElementById("question").classList.add("hidden");
-    document.getElementById("accepted").classList.remove("hidden");
-
-    // 🎵 Música solo cuando dice SÍ
-    document.getElementById("music").play();
+/* BOTÓN NO HUYE */
+const btnNo=document.getElementById("btnNo");
+btnNo.onmouseover=function(){
+    btnNo.style.position="absolute";
+    btnNo.style.left=Math.random()*80+"%";
+    btnNo.style.top=Math.random()*80+"%";
 };
 
-/* NO */
-document.getElementById("btnNo").onclick = function(){
-    document.body.classList.add("glitch");
-    setTimeout(()=>location.reload(),2000);
+/* YES */
+document.getElementById("btnYes").onclick=function(){
+    document.body.classList.add("romantic");
+    mode="hearts";
+    document.getElementById("question").classList.add("hidden");
+    document.getElementById("accepted").classList.remove("hidden");
+    document.getElementById("music").play();
 };
 
 };
@@ -207,3 +216,4 @@ document.getElementById("btnNo").onclick = function(){
 
 </body>
 </html>
+
