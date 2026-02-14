@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wanda 💚</title>
+
+<style>
+body{
+    background:black;
+    color:#00ff00;
+    font-family:monospace;
+    text-align:center;
+    padding-top:100px;
+}
+
+.hidden{
+    display:none;
+}
+
+button{
+    background:black;
+    border:2px solid #00ff00;
+    color:#00ff00;
+    padding:10px 20px;
+    margin:10px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#00ff00;
+    color:black;
+}
+
+input{
+    background:black;
+    border:2px solid #00ff00;
+    color:#00ff00;
+    padding:8px;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div id="login">
+<h2>🔐 ACCESO RESTRINGIDO</h2>
+<p>Introduce la fecha especial...</p>
+<input type="password" id="password">
+<br><br>
+<button id="btnLogin">INGRESAR</button>
+<p id="error"></p>
+</div>
+
+<div id="question" class="hidden">
+<h2>WANDA DETECTADA 💚</h2>
+<p>¿Aceptas ser mi San Valentín?</p>
+<button id="btnYes">SI 💚</button>
+<button id="btnNo">NO 💀</button>
+</div>
+
+<div id="accepted" class="hidden">
+<h1>💚 SISTEMA COMPROMETIDO 💚</h1>
+<p>Wanda ha aceptado ser mi San Valentín 💘</p>
+</div>
+
+<script>
+
+document.getElementById("btnLogin").addEventListener("click", function(){
+
+    let pass = document.getElementById("password").value.trim();
+
+    if(pass === "05/09/2024"){
+        document.getElementById("login").classList.add("hidden");
+        document.getElementById("question").classList.remove("hidden");
+    } else {
+        document.getElementById("error").innerHTML="⛔ ACCESS DENIED ⛔";
+    }
+
+});
+
+document.getElementById("btnYes").addEventListener("click", function(){
+
+    document.getElementById("question").classList.add("hidden");
+    document.getElementById("accepted").classList.remove("hidden");
+
+});
+
+document.getElementById("btnNo").addEventListener("click", function(){
+
+    document.body.style.background="red";
+    document.body.innerHTML="<h1>⚠ SISTEMA CORROMPIDO ⚠</h1>";
+
+    setTimeout(()=>{
+        location.reload();
+    },2000);
+
+});
+
+</script>
+
+</body>
+</html>
